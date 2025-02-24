@@ -1,0 +1,1 @@
+Poner las funciones del main en un archivo separado hace más difícil el mantenimiento --> por otro lado lo que podrían ser funciones separadas del cliente las tienes todas en el mismo bloque 9
