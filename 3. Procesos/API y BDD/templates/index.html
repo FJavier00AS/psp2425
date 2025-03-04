@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+</head>
+<body>
+    <h1>Gestión de Productos</h1>
+
+    <!-- Formulario para agregar productos -->
+    <form id="producto-form">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br>
+        <label for="precio">Precio:</label>
+        <input type="number" id="precio" name="precio" step="0.01" required>
+        <br>
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required>
+        <br>
+        <button type="submit">Agregar Producto</button>
+    </form>
+
+    <h2>Lista de Productos</h2>
+    <ul id="lista-productos"></ul>
+
+    <script>
+        // Función para agregar un producto a través de la API
+        document.getElementById('producto-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const nombre = document.getElementById('nombre').value;
+            const precio = document.getElementById('precio').value;
+            const cantidad = document.getElementById('cantidad').value;
+
+            const response = await fetch('/productos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nombre, precio, cantidad })
+            });
+
+            if (response.ok) {
+                alert('Producto agregado correctamente');
+                listarProductos();  // Refrescar la lista de productos
+            } else {
+                alert('Error al agregar producto');
+            }
+        });
+
+        // Función para listar los productos
+        async function listarProductos() {
+            const response = await fetch('/productos');
+            const productos = await response.json();
+            const lista = document.getElementById('lista-productos');
+            lista.innerHTML = '';
+
+            productos.forEach(producto => {
+                const li = document.createElement('li');
+                li.textContent = `${producto[1]} - Precio: ${producto[2]} - Cantidad: ${producto[3]}`;
+                lista.appendChild(li);
+            });
+        }
+
+        // Listar productos cuando cargue la página
+        listarProductos();
+    </script>
+</body>
+</html>
